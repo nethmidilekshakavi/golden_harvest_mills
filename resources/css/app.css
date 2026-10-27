@@ -1,0 +1,155 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../js/**/*.vue';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Brand tokens. Components use the Tailwind names below (bg-paper,
+ * text-ink, ...) and the values swap with the `.dark` class on <html>.
+ */
+:root {
+    --paper: #fbfaf7;
+    --surface: #f1ede4;
+    --ink: #1b1610;
+    --muted: #5a554c;
+    --line: rgb(27 22 16 / 0.12);
+    --bran: #7a5a2e;
+    --gold: #efb121;
+    --gold-deep: #d6970b;
+    --on-gold: #1b1610;
+    --husk: #1b1610;
+    --header-bg: rgb(251 250 247 / 0.82);
+    color-scheme: light;
+}
+
+.dark {
+    --paper: #15110c;
+    --surface: #1f1a13;
+    --ink: #f2ecdf;
+    --muted: #a8a091;
+    --line: rgb(242 236 223 / 0.12);
+    --bran: #d9b26a;
+    --gold: #f2b929;
+    --gold-deep: #e0a210;
+    --on-gold: #1b1610;
+    --husk: #0e0b07;
+    --header-bg: rgb(21 17 12 / 0.78);
+    color-scheme: dark;
+}
+
+@theme inline {
+    --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+
+    --color-paper: var(--paper);
+    --color-surface: var(--surface);
+    --color-ink: var(--ink);
+    --color-muted: var(--muted);
+    --color-line: var(--line);
+    --color-bran: var(--bran);
+    --color-gold: var(--gold);
+    --color-gold-deep: var(--gold-deep);
+    --color-on-gold: var(--on-gold);
+    --color-husk: var(--husk);
+    --color-header: var(--header-bg);
+    --color-flour: #f2ecdf;
+
+    --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+        scroll-behavior: auto;
+    }
+
+    body {
+        @apply bg-paper font-sans text-ink antialiased;
+        font-size: 1.0625rem;
+        line-height: 1.6;
+        transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    h1,
+    h2,
+    h3 {
+        @apply font-serif;
+        font-optical-sizing: auto;
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+    }
+
+    p {
+        text-wrap: pretty;
+    }
+
+    ::selection {
+        background: var(--gold);
+        color: var(--on-gold);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 3px;
+        border-radius: 4px;
+    }
+
+    img {
+        user-select: none;
+    }
+}
+
+@layer components {
+    .container-site {
+        @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
+    }
+
+    .btn {
+        @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[0.95rem] font-semibold transition-colors duration-300;
+    }
+
+    .btn-gold {
+        @apply bg-gold text-on-gold hover:bg-gold-deep;
+    }
+
+    .btn-ghost-light {
+        @apply border border-white/40 text-white hover:border-white hover:bg-white/10;
+    }
+
+    .btn-outline {
+        @apply border border-line text-ink hover:border-ink;
+    }
+}
+
+/* Lenis smooth scrolling */
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+/* Circular reveal used by the theme toggle (View Transitions API). */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

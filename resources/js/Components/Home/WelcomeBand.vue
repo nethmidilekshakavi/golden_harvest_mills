@@ -1,10 +1,11 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import BrandMark from '@/Components/BrandMark.vue';
-import { gsap, prefersReducedMotion } from '@/lib/motion';
+import { gsap, prefersReducedMotion, revealHeadings, SplitText } from '@/lib/motion';
 
 const root = ref(null);
 const ring = ref(null);
+const lead = ref(null);
 let ctx = null;
 
 onMounted(() => {
@@ -16,6 +17,25 @@ onMounted(() => {
             ease: 'none',
             scrollTrigger: { trigger: root.value, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
         });
+
+        revealHeadings();
+
+        // The lead paragraph "inks in" word by word as it moves up the screen.
+        SplitText.create(lead.value, {
+            type: 'words',
+            autoSplit: true,
+            onSplit: (self) =>
+                gsap.fromTo(
+                    self.words,
+                    { opacity: 0.18 },
+                    {
+                        opacity: 1,
+                        stagger: 0.1,
+                        ease: 'none',
+                        scrollTrigger: { trigger: lead.value, start: 'top 85%', end: 'bottom 45%', scrub: true },
+                    },
+                ),
+        });
     }, root.value);
 });
 
@@ -25,9 +45,9 @@ onBeforeUnmount(() => ctx?.revert());
 <template>
     <section id="about" ref="root" class="relative bg-gold text-on-gold">
         <div class="container-site grid gap-6 pt-20 pb-28 sm:pt-24 md:grid-cols-12 md:gap-10 lg:pb-32">
-            <h2 class="text-[clamp(2.25rem,5vw,3.75rem)] leading-[1.02] font-medium md:col-span-6">Welcome to Golden&nbsp;Harvest</h2>
+            <h2 data-split class="text-[clamp(2.25rem,5vw,3.75rem)] leading-[1.02] font-medium md:col-span-6">Welcome to Golden&nbsp;Harvest</h2>
             <div class="space-y-4 text-lg leading-relaxed md:col-span-6 md:pt-3 lg:col-span-5 lg:col-start-8">
-                <p>
+                <p ref="lead">
                     Golden Harvest is built on a mission to mill confidence into every sack of flour. Powered by cutting-edge
                     machinery and proudly Sri Lankan roots, we deliver bulk wheat flour to the people who feed the country.
                 </p>
